@@ -2,6 +2,7 @@ package com.lumorix.hatcomm.user.controller;
 
 
 import com.lumorix.hatcomm.user.dto.CreateUserRequest;
+import com.lumorix.hatcomm.user.dto.LoginRequest;
 import com.lumorix.hatcomm.user.dto.UserResponse;
 import com.lumorix.hatcomm.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,14 @@ public class UserController {
     public UserResponse createUser(@RequestBody CreateUserRequest userRequest){
 
         return userService.createUser(userRequest);
+
+    }
+
+    @PostMapping("/auth/login")
+    @ResponseStatus(HttpStatus.OK)
+    public UserResponse login(@RequestBody LoginRequest loginRequest){
+
+        return userService.authenticateUser(loginRequest);
 
     }
 }
