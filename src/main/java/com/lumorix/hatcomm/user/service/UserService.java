@@ -9,12 +9,8 @@ import com.lumorix.hatcomm.user.entity.UserEntity;
 import com.lumorix.hatcomm.user.mapper.UserMapper;
 import com.lumorix.hatcomm.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
