@@ -8,6 +8,7 @@ import com.lumorix.hatcomm.user.dto.UserResponse;
 import com.lumorix.hatcomm.user.entity.UserEntity;
 import com.lumorix.hatcomm.user.mapper.UserMapper;
 import com.lumorix.hatcomm.user.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class UserService {
         }
     }
 
-    public UserResponse authenticateUser(LoginRequest loginRequest) {
+    public UserResponse authenticateUser(LoginRequest loginRequest, HttpSession session) {
         if (loginRequest.email() == null || loginRequest.email().isEmpty()) {
             throw new IllegalArgumentException("Invalid username/password");
         }
@@ -59,6 +60,9 @@ public class UserService {
 
             throw new IllegalArgumentException("Invalid username/password");
         }
+
+        session.setAttribute("USER_ID", user.getUserId());
+        session.setAttribute("ROLE", user.getRole().name());
 
         return userMapper.toResponse(user);
     }
