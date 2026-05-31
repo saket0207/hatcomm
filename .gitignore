@@ -37,3 +37,5 @@ mvnw.cmd
 .mvn
 HELP.md
 .gitattributes
+
+/.DS_Store
