@@ -1,6 +1,8 @@
 package com.lumorix.hatcomm.user.service;
 
 
+import com.lumorix.hatcomm.common.exception.InvalidCredentialsException;
+import com.lumorix.hatcomm.common.exception.UserAlreadyExistsException;
 import com.lumorix.hatcomm.enumeration.Role;
 import com.lumorix.hatcomm.user.dto.CreateUserRequest;
 import com.lumorix.hatcomm.user.dto.LoginRequest;
@@ -17,6 +19,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
+    public static final String USER_ID = "USER_ID";
+    public static final String ROLE = "ROLE";
     private final UserRepository userRepository;
 
     private final UserMapper userMapper;
@@ -28,7 +32,7 @@ public class UserService {
 
         if(userRequest.email() != null && !userRequest.email().isEmpty()){
             if(userRepository.findByEmailIgnoreCase(userRequest.email()).isPresent()){
-                throw new IllegalArgumentException("User already present");
+                throw new UserAlreadyExistsException("User already present");
             }
             user = new UserEntity();
             user.setEmail(userRequest.email());
@@ -46,23 +50,23 @@ public class UserService {
 
     public UserResponse authenticateUser(LoginRequest loginRequest, HttpSession session) {
         if (loginRequest.email() == null || loginRequest.email().isEmpty()) {
-            throw new IllegalArgumentException("Invalid username/password");
+            throw new InvalidCredentialsException("Invalid username/password");
         }
 
         UserEntity user = userRepository
                 .findByEmailIgnoreCase(loginRequest.email())
                 .orElseThrow(() ->
-                        new IllegalArgumentException("Invalid username/password"));
+                        new InvalidCredentialsException("Invalid username/password"));
 
         if (!passwordEncoder.matches(
                 loginRequest.password(),
                 user.getPasswordHash())) {
 
-            throw new IllegalArgumentException("Invalid username/password");
+            throw new InvalidCredentialsException("Invalid username/password");
         }
 
-        session.setAttribute("USER_ID", user.getUserId());
-        session.setAttribute("ROLE", user.getRole().name());
+        session.setAttribute(USER_ID, user.getUserId());
+        session.setAttribute(ROLE, user.getRole().name());
 
         return userMapper.toResponse(user);
     }
