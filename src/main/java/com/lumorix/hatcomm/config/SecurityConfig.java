@@ -29,7 +29,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/users/register",
-                                "/users/auth/login"
+                                "/users/auth/login",
+                                "/users/auth/logout"
                         ).permitAll()
                         .requestMatchers(
                                 HttpMethod.GET,

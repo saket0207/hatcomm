@@ -1,10 +1,7 @@
 package com.lumorix.hatcomm.user.controller;
 
 
-import com.lumorix.hatcomm.user.dto.CreateUserRequest;
-import com.lumorix.hatcomm.user.dto.CurrentUserResponse;
-import com.lumorix.hatcomm.user.dto.LoginRequest;
-import com.lumorix.hatcomm.user.dto.UserResponse;
+import com.lumorix.hatcomm.user.dto.*;
 import com.lumorix.hatcomm.user.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -39,5 +36,12 @@ public class UserController {
         return new CurrentUserResponse(
                 (Long) session.getAttribute("USER_ID"),
                 (String) session.getAttribute("ROLE"));
+    }
+
+    @PostMapping("auth/logout")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse logout(HttpSession session){
+        session.invalidate();
+        return new ApiResponse("Logged out successfully.");
     }
 }
