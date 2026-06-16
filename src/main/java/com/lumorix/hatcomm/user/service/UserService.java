@@ -34,11 +34,7 @@ public class UserService {
             if(userRepository.findByEmailIgnoreCase(userRequest.email()).isPresent()){
                 throw new UserAlreadyExistsException("User already present");
             }
-            user = new UserEntity();
-            user.setEmail(userRequest.email());
-            String bCryptPassword = passwordEncoder.encode(userRequest.password());
-            user.setPasswordHash(bCryptPassword);
-            user.setRole(Role.CUSTOMER);
+            user = getUserEntity(userRequest);
             userRepository.save(user);
 
             return userMapper.toResponse(user);
@@ -46,6 +42,15 @@ public class UserService {
         }else{
             throw new IllegalArgumentException("Invalid email");
         }
+    }
+
+    private UserEntity getUserEntity(CreateUserRequest userRequest) {
+        UserEntity user = new UserEntity();
+        user.setEmail(userRequest.email());
+        String bCryptPassword = passwordEncoder.encode(userRequest.password());
+        user.setPasswordHash(bCryptPassword);
+        user.setRole(Role.CUSTOMER);
+        return user;
     }
 
     public UserResponse authenticateUser(LoginRequest loginRequest, HttpSession session) {
